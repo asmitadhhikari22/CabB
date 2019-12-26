@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "751760350246",
+    "firebase_url": "https://cabb-4ff88.firebaseio.com",
+    "project_id": "cabb-4ff88",
+    "storage_bucket": "cabb-4ff88.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751760350246:android:e89399b1760e1e63309ae7",
+        "android_client_info": {
+          "package_name": "com.asmit.cabb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "751760350246-6950nl3dko2f4ubnh7vaovm349ghadjf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.asmit.cabb",
+            "certificate_hash": "2dcaeeaa170cd5e7f14f5eb1bb6b8bdef8de4981"
+          }
+        },
+        {
+          "client_id": "751760350246-98edkl09v98ncr84e654qp2t55ma6mc6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvQK2Z5pxBRa3OQZn6S8A7kvVxTIqG7fI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751760350246-98edkl09v98ncr84e654qp2t55ma6mc6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
