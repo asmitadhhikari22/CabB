@@ -40,7 +40,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Button logout;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
