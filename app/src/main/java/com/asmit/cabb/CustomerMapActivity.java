@@ -108,7 +108,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         GeoFire geoFire = new GeoFire(driverLocation);
 
-        //GeoFire Queries
+        //GeoFire Queries into the pickup location
 
 
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
