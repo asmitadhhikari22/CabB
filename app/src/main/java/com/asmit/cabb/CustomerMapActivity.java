@@ -206,6 +206,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverMarker.remove();
                     }
 
+                    Location loc1 = new Location("");
+                    loc1.setLatitude(pickupLocation.latitude);
+                    loc1.setLongitude(pickupLocation.longitude);
+
+
+                    Location loc2 = new Location("");
+                    loc2.setLatitude(driverLatLng.latitude);
+                    loc2.setLongitude(driverLatLng.longitude);
+
+
                     mDriverMarker =mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver"));
 
 
