@@ -216,6 +216,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     loc2.setLongitude(driverLatLng.longitude);
 
 
+                    float distance = loc1.distanceTo(loc2);
+
+                    request.setText("Driver Found" + String.valueOf(distance));
+
+
+
+
                     mDriverMarker =mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver"));
 
 
