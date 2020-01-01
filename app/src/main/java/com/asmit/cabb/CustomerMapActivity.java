@@ -187,7 +187,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     double locationLat = 0;
                     double locationLng = 0;
-                    request.setText("Driver Found");
+                    /*   request.setText("Driver Found");*/
 
                     if (map.get(0) != null) {
 
@@ -218,18 +218,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     float distance = loc1.distanceTo(loc2);
 
-                    request.setText("Driver Found" + String.valueOf(distance));
+                    if (distance < 100) {
+                        request.setText("Driver's Here");
+
+                    } else {
+                        request.setText("Driver Found : " + String.valueOf(distance));
+
+                    }
 
 
-
-
-                    mDriverMarker =mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver"));
-
+                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Your Driver"));
 
 
                 }
 
-            }//
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
