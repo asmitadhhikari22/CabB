@@ -229,7 +229,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 }
 
-            }
+            }//
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
