@@ -107,7 +107,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     }
                     driverFound = false;
-                    radius=1;
+                    radius = 1;
 
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
@@ -115,6 +115,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     GeoFire geoFire = new GeoFire(ref);
                     geoFire.removeLocation(userId);
+
+
+                    //Remove Pickup marker
+
+                    if (pickupMarker != null) {
+                        pickupMarker.remove();
+                    }
+                    request.setText("Call Cab");
 
 
                 } else {
@@ -130,7 +138,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
-                    mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here"));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here"));
 
                     request.setText("Getting Your Driver....");
 
