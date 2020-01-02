@@ -49,7 +49,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private String customerId = "";
 
-    private Boolean isLoggingOut =false;
+    private Boolean isLoggingOut = false;
 
 
     @Override
@@ -101,10 +101,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                     customerId = "";
 
-                    if (pickupMarker !=null){
+                    if (pickupMarker != null) {
                         pickupMarker.remove();
                     }
-                    if (assignedCustomerPickupLocationRefListener!=null){
+                    if (assignedCustomerPickupLocationRefListener != null) {
                         assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
 
                     }
@@ -285,7 +285,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
-    private void disconnectDriver(){
+    private void disconnectDriver() {
 
 
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -296,12 +296,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         geoFire.removeLocation(userId);
 
     }
+
     @Override
     protected void onStop() {
         super.onStop();
 
 
-        if (!isLoggingOut){
+        if (!isLoggingOut) {
 
 
             disconnectDriver();

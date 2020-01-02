@@ -47,7 +47,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    private Button logout, request;
+    private Button logout, request, mSettings;
 
 
     private LatLng pickupLocation;
@@ -72,6 +72,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         logout = (Button) findViewById(R.id.logout);
 
         request = (Button) findViewById(R.id.request);
+
+        mSettings =(Button) findViewById(R.id.settings);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +149,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 }
 
 
+            }
+        });
+
+        mSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CustomerMapActivity.this,CustomerSettingsActivity.class);
+                startActivity(intent);
+                return;
             }
         });
     }
