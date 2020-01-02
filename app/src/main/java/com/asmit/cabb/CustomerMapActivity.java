@@ -51,6 +51,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private LatLng pickupLocation;
 
+    private Boolean requestBol = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,20 +85,32 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
 
-                GeoFire geoFire = new GeoFire(ref);
-                geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                if (requestBol) {
+                    //remove request from database
+
+                    geoQuery.removeAllListeners();
+
+                    driverLocationRef.removeEventListener(driverLocationRefListener);
+
+                } else {
+
+                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+
+                    GeoFire geoFire = new GeoFire(ref);
+                    geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
 
-                pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                    pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
-                mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here"));
+                    mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here"));
 
-                request.setText("Getting Your Driver....");
+                    request.setText("Getting Your Driver....");
 
-                getClosestDriver();
+                    getClosestDriver();
+                }
+
 
             }
         });
@@ -107,6 +121,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private String driverFoundID;
 
 
+    GeoQuery geoQuery;
+
     private void getClosestDriver() {
 
         DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
@@ -116,7 +132,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         //GeoFire Queries into the pickup location
 
 
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
+        geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
 
         geoQuery.removeAllListeners();
 
@@ -176,10 +192,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private Marker mDriverMarker;
 
+    private DatabaseReference driverLocationRef;
+
+    private ValueEventListener driverLocationRefListener;
+
     private void getDriverLocation() {
 
-        DatabaseReference driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
-        driverLocationRef.addValueEventListener(new ValueEventListener() {
+        driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
+        driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -187,6 +207,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     double locationLat = 0;
                     double locationLng = 0;
+
                     /*   request.setText("Driver Found");*/
 
                     if (map.get(0) != null) {
