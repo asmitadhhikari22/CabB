@@ -1,13 +1,18 @@
 package com.asmit.cabb;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EdgeEffect;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,12 +31,18 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     private EditText mNameField, mPhoneField;
     private Button mConfirm, mBack;
 
+
+    private ImageView mProfileImage;
+
     private FirebaseAuth mAuth;
     private DatabaseReference mCustomerDatabase;
 
     private String userID;
     private String mName;
     private String mPhone;
+
+
+    private Uri resultUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +52,8 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
+
+        mProfileImage = (ImageView) findViewById(R.id.profileImage);
 
 
         mConfirm = (Button) findViewById(R.id.confirm);
@@ -54,6 +67,16 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(userID);
 
         getUserInfo();
+
+        mProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1);
+
+            }
+        });
 
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,18 +96,18 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
     }
 
-    private void getUserInfo(){
+    private void getUserInfo() {
         mCustomerDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
-                    Map<String,Object> map =(Map<String, Object>) dataSnapshot.getValue();
-                    if (map.get("name")!=null){
-                        mName=map.get("name").toString();
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if (map.get("name") != null) {
+                        mName = map.get("name").toString();
                         mNameField.setText(mName);
                     }
-                    if (map.get("phone")!=null){
-                        mPhone=map.get("phone").toString();
+                    if (map.get("phone") != null) {
+                        mPhone = map.get("phone").toString();
                         mPhoneField.setText(mPhone);
                     }
 
@@ -101,19 +124,28 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
     private void saveUserInformation() {
 
-        mName =mNameField.getText().toString();
-        mPhone =mPhoneField.getText().toString();
+        mName = mNameField.getText().toString();
+        mPhone = mPhoneField.getText().toString();
 
         //Save user information into the database
 
-        Map userInfo= new HashMap();
+        Map userInfo = new HashMap();
         userInfo.put("name", mName);
         userInfo.put("phone", mPhone);
         mCustomerDatabase.updateChildren(userInfo);
 
         finish();
 
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            final Uri imageUri = data.getData();
 
+            resultUri = imageUri;
+            mProfileImage.setImageURI(resultUri);
+        }
     }
 }
