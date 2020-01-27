@@ -225,10 +225,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     // Customer Id will be inside the child named of customerRideId
 
-                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+                    DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
                     String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     HashMap map = new HashMap();
                     map.put("customerRideId", customerId);
+                    map.put("destination", destination);
                     driverRef.updateChildren(map);
 
                     //Show driver location in customer map
