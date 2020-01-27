@@ -58,6 +58,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private SupportMapFragment mapFragment;
 
     private LinearLayout mCustomerInfo;
+    
     private ImageView mCustomerProfileImage;
 
     private TextView mCustomerName, mCustomerPhone;
@@ -193,6 +194,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
     }
+
     private void getAssignedCustomerInfo() {
 
         mCustomerInfo.setVisibility(View.VISIBLE);
