@@ -265,6 +265,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
     }
+    //Alert
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
