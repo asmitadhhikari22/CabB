@@ -59,9 +59,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    private Button logout, mSettings;
+    private Button logout, mSettings, mrideStatus;
 
-    private String customerId = "";
+    private int status = 0;
+
+    private String customerId = "", destination;
+
+    private LatLng destinationLatLng;
 
     private Boolean isLoggingOut = false;
 
@@ -110,9 +114,28 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         mCustomerDestination = (TextView) findViewById(R.id.customerDestination);
 
-        mSettings=(Button) findViewById(R.id.settings);
+        mSettings = (Button) findViewById(R.id.settings);
 
         logout = (Button) findViewById(R.id.logout);
+
+        mrideStatus= (Button) findViewById(R.id.rideStatus);
+
+        mrideStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (status){
+                    case 1:
+
+                        break;
+
+                    case 2:
+
+                        endRide();
+
+                        break;
+                }
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,6 +174,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+
+                    status = 1;
                     customerId = dataSnapshot.getValue().toString();
                     //Pickup location
                     getAssignedCustomerPickupLocation();
@@ -265,12 +290,22 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void getRouteToMarker(LatLng pickupLatLng) {
         Routing routing = new Routing.Builder()
+                .key("AIzaSyBrEugXJFIkd8-CkKB3nINDvVWsCtY7d_w")
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this)
                 .alternativeRoutes(false)
                 .waypoints(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), pickupLatLng)
                 .build();
         routing.execute();
+/*    Alternative
+
+    Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .withListener(this)
+                .alternativeRoutes(false)
+                .waypoints(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), pickupLatLng)
+                .build();
+        routing.execute();*/
     }
 
     private void getAssignedCustomerInfo() {
@@ -307,7 +342,50 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
     }
-    //Alert
+
+    private void endRide(){
+
+        requestBol = false;
+
+        geoQuery.removeAllListeners();
+
+        driverLocationRef.removeEventListener(driverLocationRefListener);
+
+        driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+
+
+        if (driverFoundID != null) {
+
+            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
+            driverRef.removeValue();
+            driverFoundID = null;
+
+        }
+
+
+        //18:40 Start from here
+
+
+        driverFound = false;
+        radius = 1;
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+
+
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.removeLocation(userId);
+
+
+        //Remove Pickup marker
+
+        if (pickupMarker != null) {
+            pickupMarker.remove();
+        }
+
+
+
+    }
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -484,9 +562,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onRoutingFailure(RouteException e) {
-        if(e != null) {
+        if (e != null) {
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }else {
+        } else {
             Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -498,7 +576,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
-        if(polylines.size()>0) {
+        if (polylines.size() > 0) {
             for (Polyline poly : polylines) {
                 poly.remove();
             }
@@ -506,7 +584,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         polylines = new ArrayList<>();
         //add route(s) to the map.
-        for (int i = 0; i <route.size(); i++) {
+        for (int i = 0; i < route.size(); i++) {
 
             //In case of more than 5 alternative routes
             int colorIndex = i % COLORS.length;
@@ -518,7 +596,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             Polyline polyline = mMap.addPolyline(polyOptions);
             polylines.add(polyline);
 
-            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -528,8 +606,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
-    private void erasePloylines(){
-        for (Polyline line: polylines){
+    private void erasePloylines() {
+        for (Polyline line : polylines) {
             line.remove();
         }
         polylines.clear();
