@@ -420,6 +420,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 } else {
                     Toast.makeText(getApplicationContext(), "Please Provide the Permission", Toast.LENGTH_SHORT).show();
                 }
+                break;
             }
 
         }

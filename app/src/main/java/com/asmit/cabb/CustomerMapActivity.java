@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -60,6 +61,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private Boolean requestBol = false;
 
+    private SupportMapFragment mapFragment;
+
     private Marker pickupMarker;
 
     private String destination;
@@ -72,16 +75,24 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        } else {
+
+            mapFragment.getMapAsync(this);
+
+        }
 
         logout = (Button) findViewById(R.id.logout);
 
         request = (Button) findViewById(R.id.request);
 
-        mSettings =(Button) findViewById(R.id.settings);
+        mSettings = (Button) findViewById(R.id.settings);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +174,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CustomerMapActivity.this,CustomerSettingsActivity.class);
+                Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingsActivity.class);
                 startActivity(intent);
                 return;
             }
@@ -352,7 +363,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+
         }
 
         buildGoogleApiClient();
@@ -417,10 +429,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+
         }
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -436,6 +448,25 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    final int LOCATION_REQUEST_CODE = 1;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case LOCATION_REQUEST_CODE: {
+                //if connection is cancelled
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mapFragment.getMapAsync(this);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please Provide the Permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
     }
 
     @Override
