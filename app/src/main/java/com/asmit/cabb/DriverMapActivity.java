@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.geofire.GeoFire;
@@ -58,7 +59,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private SupportMapFragment mapFragment;
 
     private LinearLayout mCustomerInfo;
-    
+
     private ImageView mCustomerProfileImage;
 
     private TextView mCustomerName, mCustomerPhone, mCustomerDestination;
@@ -73,7 +74,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(DriverMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        } else {
+
+            mapFragment.getMapAsync(this);
+
+        }
 
 
         mCustomerInfo = (LinearLayout) findViewById(R.id.customerInfo);
@@ -87,7 +96,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         mCustomerPhone = (TextView) findViewById(R.id.customerPhone);
 
-        mCustomerDestination= (TextView) findViewById(R.id.customerDestination);
+        mCustomerDestination = (TextView) findViewById(R.id.customerDestination);
 
 
         logout = (Button) findViewById(R.id.logout);
@@ -146,8 +155,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     mCustomerProfileImage.setImageResource(R.mipmap.ic_car);
 
 
-
-
                 }
             }
 
@@ -171,11 +178,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     mCustomerDestination.setText("Destination:" + destination);
 
 
-
                 } else {
 
                     mCustomerDestination.setText("Destination: --");
-
 
 
                 }
@@ -369,7 +374,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            ActivityCompat.requestPermissions(DriverMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -398,6 +403,26 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(userId);
 
+    }
+
+
+    final int LOCATION_REQUEST_CODE = 1;
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+
+            case LOCATION_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mapFragment.getMapAsync(this);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please Provide the Permission", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
     }
 
     @Override
