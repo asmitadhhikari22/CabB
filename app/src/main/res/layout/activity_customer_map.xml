@@ -106,6 +106,38 @@
 
     </LinearLayout>
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioGroup"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CabX"
+                android:id="@+id/cabX"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CabBlack"
+                android:id="@+id/cabBlack"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CabXl"
+                android:id="@+id/cabXl"/>
+        </RadioGroup>
+
+
     <Button
         android:id="@+id/request"
         android:layout_width="match_parent"
@@ -113,6 +145,7 @@
         android:layout_gravity="bottom"
         android:text="Call Cab" />
 
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>
