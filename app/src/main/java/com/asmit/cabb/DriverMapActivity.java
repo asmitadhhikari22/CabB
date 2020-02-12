@@ -238,7 +238,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     if (map.get("destinationLng") != null) {
                         destinationLng = Double.valueOf(map.get("destinationLng").toString());
 
-                        destinationLatLng = new LatLng(destinationLat, destinationLng)
+                        destinationLatLng = new LatLng(destinationLat, destinationLng);
                     }
 
 
