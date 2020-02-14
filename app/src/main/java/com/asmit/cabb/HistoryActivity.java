@@ -94,7 +94,7 @@ public class HistoryActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        })
+        });
     }
 
 
