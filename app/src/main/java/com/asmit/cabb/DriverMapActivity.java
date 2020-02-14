@@ -13,8 +13,10 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,11 +64,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private Button logout, mSettings, mRideStatus;
 
+    private Switch mWorkingSwitch;
+
     private int status = 0;
 
     private String customerId = "", destination;
 
     private LatLng destinationLatLng, pickupLatLng;
+
+    private float rideDistance;
+
 
     private Boolean isLoggingOut = false;
 
@@ -114,6 +121,20 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mCustomerPhone = (TextView) findViewById(R.id.customerPhone);
 
         mCustomerDestination = (TextView) findViewById(R.id.customerDestination);
+
+        mWorkingSwitch = (Switch) findViewById(R.id.workingSwitch);
+
+        mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    connectDriver();
+                } else {
+                    disconnectDriver();
+                }
+            }
+        });
+
 
         mSettings = (Button) findViewById(R.id.settings);
 
@@ -384,6 +405,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         geoFire.removeLocation(customerId);
         customerId = "";
 
+        rideDistance = 0;
+
 
         //Remove Pickup marker
 
@@ -440,7 +463,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private Long getCurrentTimestamp() {
 
-        Long timestamp = System.currentTimeMillis()/1000;
+        Long timestamp = System.currentTimeMillis() / 1000;
         return timestamp;
 
     }
@@ -481,6 +504,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onLocationChanged(Location location) {
+
+        if (!customerId.equals("")) {
+            rideDistance += mLastLocation.distanceTo(location)/1000;
+
+
+        }
 
         if (getApplicationContext() != null) {
 
@@ -546,14 +575,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(DriverMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-        }
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-
     }
 
     @Override
@@ -566,6 +587,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
+    private void connectDriver() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(DriverMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        }
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+    }
 
     private void disconnectDriver() {
 
@@ -600,7 +631,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    @Override
+/*    @Override
     protected void onStop() {
         super.onStop();
 
@@ -613,7 +644,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         }
 
 
-    }
+    }*/
 
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};

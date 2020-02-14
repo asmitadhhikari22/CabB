@@ -8,17 +8,21 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnDriver, btnCustomer;
+    private Button mDriver, mCustomer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnDriver = findViewById(R.id.btnDriver);
-        btnCustomer=findViewById(R.id.btnCustomer);
+        mDriver = findViewById(R.id.btnDriver);
+        mCustomer=findViewById(R.id.btnCustomer);
 
-        btnDriver.setOnClickListener(new View.OnClickListener() {
+
+        startService(new Intent(MainActivity.this, onAppKilled.class));
+
+
+        mDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(MainActivity.this,DriverLoginActivity.class);
@@ -27,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnCustomer.setOnClickListener(new View.OnClickListener() {
+        mCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(MainActivity.this,CustomerLoginActivity.class);

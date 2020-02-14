@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_car_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".onAppKilled" android:stopWithTask="false"/>
         <activity android:name=".HistorySingleActivity"></activity>
         <activity android:name=".HistoryActivity" />
         <activity android:name=".DriverSettingsActivity" />
