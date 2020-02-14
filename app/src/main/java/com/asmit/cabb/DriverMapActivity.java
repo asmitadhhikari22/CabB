@@ -66,7 +66,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private String customerId = "", destination;
 
-    private LatLng destinationLatLng;
+    private LatLng destinationLatLng, pickupLatLng;
 
     private Boolean isLoggingOut = false;
 
@@ -424,14 +424,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         customerrRef.child(requestId).setValue(true);
 
         HashMap map = new HashMap();
-
         map.put("driver", userId);
         map.put("customer", customerId);
         map.put("rating", 0);
         map.put("timestamp", getCurrentTimestamp());
-
-
-
+        map.put("destination", destination);
+        map.put("location/from/lat", pickupLatLng.latitude);
+        map.put("location/from/lng", pickupLatLng.longitude);
+        map.put("location/to/lat", destinationLatLng.latitude);
+        map.put("location/to/lng", destinationLatLng.longitude);
+        map.put("distance", rideDistance);
         historyRef.child(requestId).updateChildren(map);
 
     }

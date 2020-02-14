@@ -90,5 +90,4 @@
             android:enabled="false"/>
     </LinearLayout>
 
-
 </androidx.core.widget.NestedScrollView>
