@@ -61,7 +61,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    private Button logout, request, mSettings;
+    private Button logout, request, mSettings, mHistory;
 
 
     private LatLng pickupLocation;
@@ -133,6 +133,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mSettings = (Button) findViewById(R.id.settings);
 
+
+        mHistory = (Button) findViewById(R.id.history);
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,8 +155,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if (requestBol) {
 
                     endRide();
-
-
 
 
                 } else {
@@ -195,6 +196,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingsActivity.class);
+                startActivity(intent);
+                return;
+            }
+        });
+
+
+        mHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
+                intent.putExtra("customerOrDriver", "Customers");
                 startActivity(intent);
                 return;
             }
@@ -455,11 +467,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if (dataSnapshot.exists()) {
 
 
-
                 } else {
 
                     endRide();
-
 
 
                 }
@@ -474,7 +484,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     }
 
-    private void endRide(){
+    private void endRide() {
 
         requestBol = false;
 
@@ -515,7 +525,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverPhone.setText("");
         mDriverCar.setText("Destination: --");
         mDriverProfileImage.setImageResource(R.mipmap.ic_car);
-
 
 
     }

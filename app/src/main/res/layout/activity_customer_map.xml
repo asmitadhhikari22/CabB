@@ -18,32 +18,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logout" />
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Logout" />
+
+            <Button
+                android:id="@+id/history"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="history" />
+
+            <Button
+                android:id="@+id/settings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Settings" />
 
 
-        <Button
-            android:layout_alignParentRight="true"
-            android:id="@+id/settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="Settings" />
+        </LinearLayout>
+
 
         <androidx.cardview.widget.CardView
-            android:layout_below="@+id/settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/buttons"
             android:layout_margin="20sp">
 
-            <fragment android:id="@+id/autocomplete_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <fragment
+                android:id="@+id/autocomplete_fragment"
                 android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </androidx.cardview.widget.CardView>
 
@@ -53,97 +68,97 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_gravity="bottom"
-        >
+        android:orientation="vertical">
 
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/driverInfo"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:background="@android:color/white"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="100sp"
-            android:layout_height="100sp"
-            android:id="@+id/driverProfileImage"
-            android:src="@mipmap/ic_car"
-            android:padding="20sp"/>
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/driverInfo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="40sp">
+            android:layout_gravity="bottom"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
+            <ImageView
+                android:id="@+id/driverProfileImage"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
+                android:padding="20sp"
+                android:src="@mipmap/ic_car" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/driverName"
-                android:paddingBottom="10sp"
-                android:paddingTop="20sp"/>
+                android:orientation="vertical"
+                android:paddingLeft="40sp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/driverPhone"
-                android:paddingBottom="10sp"
-                android:paddingTop="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/driverCar"
-                android:paddingBottom="10sp"
-                android:paddingTop="20sp"/>
+                <TextView
+                    android:id="@+id/driverName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="10sp" />
+
+                <TextView
+                    android:id="@+id/driverPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="10sp" />
+
+                <TextView
+                    android:id="@+id/driverCar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="10sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
-
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white">
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/radioGroup"
-            android:orientation="horizontal">
+            android:background="@android:color/white"
+            android:orientation="vertical">
 
-
-            <RadioButton
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CabX"
-                android:id="@+id/cabX"/>
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:layout_width="wrap_content"
+
+                <RadioButton
+                    android:id="@+id/cabX"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CabX" />
+
+                <RadioButton
+                    android:id="@+id/cabBlack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CabBlack" />
+
+                <RadioButton
+                    android:id="@+id/cabXl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CabXl" />
+            </RadioGroup>
+
+
+            <Button
+                android:id="@+id/request"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CabBlack"
-                android:id="@+id/cabBlack"/>
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CabXl"
-                android:id="@+id/cabXl"/>
-        </RadioGroup>
-
-
-    <Button
-        android:id="@+id/request"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="Call Cab" />
+                android:layout_gravity="bottom"
+                android:text="Call Cab" />
 
         </LinearLayout>
     </LinearLayout>
