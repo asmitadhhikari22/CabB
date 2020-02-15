@@ -5,7 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.asmit.cabb.historyRecyclerView.HistoryAdapter;
 import com.asmit.cabb.historyRecyclerView.HistoryObject;
@@ -28,10 +33,22 @@ public class HistoryActivity extends AppCompatActivity {
     private RecyclerView.Adapter mHistoryAdapter;
     private RecyclerView.LayoutManager mHistoryLayoutManager;
 
+    private TextView mBalance;
+
+    private Double Balance = 0.0;
+
+    private Button mPayout;
+
+    private EditText mPayoutEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+        mBalance = findViewById(R.id.balance);
+        mPayout = findViewById(R.id.payout);
+        mPayoutEmail = findViewById(R.id.payoutEmail);
 
 
         mHistoryRecyclerView = (RecyclerView) findViewById(R.id.historyRecyclerView);
@@ -45,6 +62,20 @@ public class HistoryActivity extends AppCompatActivity {
         customerOrDriver = getIntent().getExtras().getString("customerOrDriver");
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         getUserHistoryIds();
+
+        if(customerOrDriver.equals("Drivers")){
+            mBalance.setVisibility(View.VISIBLE);
+            mPayout.setVisibility(View.VISIBLE);
+            mPayoutEmail.setVisibility(View.VISIBLE);
+        }
+
+        mPayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                payoutRequest();
+            }
+        });
+
 
         /*HistoryObject obj = new HistoryObject(rideId, getDate(timestamp));
         resultsHistory.add(obj);
@@ -78,16 +109,34 @@ public class HistoryActivity extends AppCompatActivity {
 
         DatabaseReference historyDatabase = FirebaseDatabase.getInstance().getReference().child("history").child(rideKey);
         historyDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     String rideId = dataSnapshot.getKey();
                     Long timestamp = 0L;
                     String distance = "";
                     Double ridePrice = 0.0;
-                }
 
+                    if (dataSnapshot.child("timestamp").getValue() != null) {
+                        timestamp = Long.valueOf(dataSnapshot.child("timestamp").getValue().toString());
+                    }
+                    if (dataSnapshot.child("customerPaid").getValue() != null && dataSnapshot.child("driverPaidOut").getValue() == null) {
+                        if (dataSnapshot.child("distance").getValue() != null) {
+//                            distance = dataSnapshot.child("distance").getValue().toString();
+                            ridePrice = Double.valueOf(dataSnapshot.child("price").getValue().toString());
+                            Balance += ridePrice;
+                            mBalance.setText("Balance: " + String.valueOf(Balance) + " $");
+                        }
+                    }
+
+                    HistoryObject obj = new HistoryObject(rideId, getDate(timestamp));
+                    resultsHistory.add(obj);
+                    mHistoryAdapter.notifyDataSetChanged();
+
+                }
             }
 
             @Override
