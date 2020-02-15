@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,8 +23,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -51,7 +65,7 @@ public class HistoryActivity extends AppCompatActivity {
         mPayoutEmail = findViewById(R.id.payoutEmail);
 
 
-        mHistoryRecyclerView = (RecyclerView) findViewById(R.id.historyRecyclerView);
+        mHistoryRecyclerView = findViewById(R.id.historyRecyclerView);
         mHistoryRecyclerView.setNestedScrollingEnabled(false);
         mHistoryRecyclerView.setHasFixedSize(true);
         mHistoryLayoutManager = new LinearLayoutManager(HistoryActivity.this);
@@ -63,7 +77,7 @@ public class HistoryActivity extends AppCompatActivity {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         getUserHistoryIds();
 
-        if(customerOrDriver.equals("Drivers")){
+        if (customerOrDriver.equals("Drivers")) {
             mBalance.setVisibility(View.VISIBLE);
             mPayout.setVisibility(View.VISIBLE);
             mPayoutEmail.setVisibility(View.VISIBLE);
@@ -84,14 +98,15 @@ public class HistoryActivity extends AppCompatActivity {
 
     }
 
+
     private void getUserHistoryIds() {
 
         DatabaseReference userHistoryDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(customerOrDriver).child(userId).child("history");
         userHistoryDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    for(DataSnapshot history : dataSnapshot.getChildren()){
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot history : dataSnapshot.getChildren()) {
                         FetchRideInformation(history.getKey());
                     }
                 }
@@ -153,5 +168,79 @@ public class HistoryActivity extends AppCompatActivity {
 
         return resultsHistory;
 
+    }
+
+    public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
+    ProgressDialog progress;
+
+    private void payoutRequest() {
+
+
+        progress = new ProgressDialog(this);
+        progress.setTitle("Processing your payout");
+        progress.setMessage("Please Wait...");
+        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+        progress.show();
+
+
+        final OkHttpClient client = new OkHttpClient();
+        JSONObject postData = new JSONObject();
+
+
+        try {
+            postData.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+            postData.put("email", mPayoutEmail.getText());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(MEDIA_TYPE,
+                postData.toString());
+
+        final Request request = new Request.Builder()
+                .url("https://us-central1-uberapp-408c8.cloudfunctions.net/payout")
+                .post(body)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Your Token")
+                .addHeader("cache-control", "no-cache")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String mMessage = e.getMessage().toString();
+                Log.w("failure Response", mMessage);
+                progress.dismiss();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                int responseCode = response.code();
+
+
+                if (response.isSuccessful())
+                    switch (responseCode) {
+                        case 200:
+                            Snackbar.make(findViewById(R.id.layout), "Payout Successful!", Snackbar.LENGTH_LONG).show();
+                            break;
+                        case 501:
+                            Snackbar.make(findViewById(R.id.layout), "Error: no payout available", Snackbar.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Snackbar.make(findViewById(R.id.layout), "Error: couldn't complete the transaction", Snackbar.LENGTH_LONG).show();
+                            break;
+                    }
+
+                else
+                    Snackbar.make(findViewById(R.id.layout), "Error: couldn't complete the transaction", Snackbar.LENGTH_LONG).show();
+
+                progress.dismiss();
+
+            }
+
+
+        });
     }
 }
