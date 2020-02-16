@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.asmit.cabb.historyRecyclerView.HistoryAdapter;
 import com.asmit.cabb.historyRecyclerView.HistoryObject;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,7 +30,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -161,6 +165,13 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
+    private String getDate(Long time) {
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(time*1000);
+        String date = DateFormat.format("MM-dd-yyyy hh:mm", cal).toString();
+        return date;
+    }
+
 
     private ArrayList resultsHistory = new ArrayList<HistoryObject>();
 
@@ -195,8 +206,7 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
 
-        RequestBody body = RequestBody.create(MEDIA_TYPE,
-                postData.toString());
+        RequestBody body = RequestBody.create(MEDIA_TYPE, postData.toString());
 
         final Request request = new Request.Builder()
                 .url("https://us-central1-uberapp-408c8.cloudfunctions.net/payout")
