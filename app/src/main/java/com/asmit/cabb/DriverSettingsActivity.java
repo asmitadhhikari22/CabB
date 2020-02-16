@@ -70,17 +70,17 @@ public class DriverSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_driver_settings);
 
 
-        mNameField = (EditText) findViewById(R.id.name);
-        mPhoneField = (EditText) findViewById(R.id.phone);
-        mCarField = (EditText) findViewById(R.id.car);
+        mNameField = findViewById(R.id.name);
+        mPhoneField = findViewById(R.id.phone);
+        mCarField = findViewById(R.id.car);
 
-        mProfileImage = (ImageView) findViewById(R.id.profileImage);
+        mProfileImage = findViewById(R.id.profileImage);
 
-        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        mRadioGroup = findViewById(R.id.radioGroup);
 
 
-        mConfirm = (Button) findViewById(R.id.confirm);
-        mBack = (Button) findViewById(R.id.back);
+        mConfirm = findViewById(R.id.confirm);
+        mBack = findViewById(R.id.back);
 
 
         mAuth = FirebaseAuth.getInstance();

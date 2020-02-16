@@ -103,15 +103,15 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
 
-        rideLocation = (TextView) findViewById(R.id.rideLocation);
-        rideDistance = (TextView) findViewById(R.id.rideDistance);
-        rideDate = (TextView) findViewById(R.id.rideDate);
-        userName = (TextView) findViewById(R.id.userName);
-        userPhone = (TextView) findViewById(R.id.userPhone);
+        rideLocation = findViewById(R.id.rideLocation);
+        rideDistance = findViewById(R.id.rideDistance);
+        rideDate = findViewById(R.id.rideDate);
+        userName = findViewById(R.id.userName);
+        userPhone = findViewById(R.id.userPhone);
 
-        userImage = (ImageView) findViewById(R.id.userImage);
+        userImage = findViewById(R.id.userImage);
 
-        mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
+        mRatingBar = findViewById(R.id.ratingBar);
 
         mPay = findViewById(R.id.pay);
 

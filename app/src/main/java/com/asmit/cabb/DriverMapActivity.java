@@ -142,13 +142,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         });
 
 
-        mSettings = (Button) findViewById(R.id.settings);
+        mSettings = findViewById(R.id.settings);
 
-        logout = (Button) findViewById(R.id.logout);
+        logout = findViewById(R.id.logout);
 
-        mRideStatus = (Button) findViewById(R.id.rideStatus);
+        mRideStatus = findViewById(R.id.rideStatus);
 
-        mHistory = (Button) findViewById(R.id.history);
+        mHistory = findViewById(R.id.history);
 
 
         mRideStatus.setOnClickListener(new View.OnClickListener() {

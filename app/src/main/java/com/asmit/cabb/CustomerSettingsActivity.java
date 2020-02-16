@@ -64,14 +64,14 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_customer_settings);
 
 
-        mNameField = (EditText) findViewById(R.id.name);
-        mPhoneField = (EditText) findViewById(R.id.phone);
+        mNameField = findViewById(R.id.name);
+        mPhoneField = findViewById(R.id.phone);
 
-        mProfileImage = (ImageView) findViewById(R.id.profileImage);
+        mProfileImage = findViewById(R.id.profileImage);
 
 
-        mConfirm = (Button) findViewById(R.id.confirm);
-        mBack = (Button) findViewById(R.id.back);
+        mConfirm = findViewById(R.id.confirm);
+        mBack = findViewById(R.id.back);
 
 
         mAuth = FirebaseAuth.getInstance();
